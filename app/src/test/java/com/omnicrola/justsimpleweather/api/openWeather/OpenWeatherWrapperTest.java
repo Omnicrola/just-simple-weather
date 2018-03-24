@@ -1,6 +1,7 @@
 package com.omnicrola.justsimpleweather.api.openWeather;
 
 import com.omnicrola.justsimpleweather.api.ResultHandler;
+import com.omnicrola.justsimpleweather.api.WeatherSettings;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
 
 import org.junit.Before;
@@ -26,11 +27,13 @@ public class OpenWeatherWrapperTest {
     public void setup() {
         openWeatherWrapper = new OpenWeatherWrapper();
         actualReport = null;
+
     }
 
     @Test
     public void getCurentWeather_getsData_Functional() throws Exception {
-        openWeatherWrapper.getCurrentWeather(new ResultHandler<WeatherReport>() {
+        WeatherSettings weatherSettings = new WeatherSettings();
+        openWeatherWrapper.getCurrentWeather(weatherSettings, new ResultHandler<WeatherReport>() {
             @Override
             public void handle(WeatherReport result) {
                 actualReport = result;

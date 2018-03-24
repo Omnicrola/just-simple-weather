@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.omnicrola.justsimpleweather.R;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
+import com.omnicrola.justsimpleweather.util.WindConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,13 +48,9 @@ public class WeatherDisplayAdapter {
     private void setWind(WeatherReport weatherReport) {
         TextView windView = activity.findViewById(R.id.current_wind);
         float windSpeed = weatherReport.getWindSpeed();
-        String windDirection = getWindDirection(weatherReport.getWindDirection());
+        String windDirection = WindConverter.directionFromDegrees(weatherReport.getWindDirection());
         String display = String.format(Locale.US, "Wind %.0f %s", windSpeed, windDirection);
         windView.setText(display);
-    }
-
-    private String getWindDirection(float windDirection) {
-        return String.valueOf(windDirection);
     }
 
     private void setTemperature(WeatherReport weatherReport) {

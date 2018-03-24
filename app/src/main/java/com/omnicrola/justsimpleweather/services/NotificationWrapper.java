@@ -27,7 +27,7 @@ public class NotificationWrapper {
         Notification notification = new Notification.Builder(applicationContext)
                 .setContentTitle("Current weather")
                 .setContentText(displayText)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.weather_icon_sun)
                 .build();
         notification.flags = Notification.FLAG_ONGOING_EVENT;
 
