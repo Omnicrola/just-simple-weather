@@ -3,7 +3,9 @@ package com.omnicrola.justsimpleweather.ui;
 
 import android.app.Activity;
 import android.util.Log;
-import android.view.View;
+import android.view.LayoutInflater;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.omnicrola.justsimpleweather.R;
@@ -20,36 +22,44 @@ public class ForecastDisplayAdapter {
 
     public ForecastDisplayAdapter(Activity activity) {
         this.activity = activity;
-        simpleDateFormat = new SimpleDateFormat("MM/dd hh:mm", Locale.getDefault());
+        simpleDateFormat = new SimpleDateFormat("EEE dd ha", Locale.getDefault());
     }
 
     public void setDisplay(WeatherForecasts forecasts) {
-        if (activity.findViewById(R.id.forecast_temp) == null) {
+        TableLayout tableLayout = activity.findViewById(R.id.forecast_table);
+        if (tableLayout == null) {
             return;
             // display is not available yet
         }
         Log.i("display-adapter", "Updating forecast text views");
 
         if (forecasts.getForecasts().size() > 0) {
-            WeatherForecasts.WeatherForecast forecast = forecasts.getForecasts().get(0);
-
-            TextView timeView = activity.findViewById(R.id.forecast_time);
-            String formattedTime = simpleDateFormat.format(new Date(forecast.getTimeInFuture()));
-            String display = String.format(Locale.US, "%s", formattedTime);
-            timeView.setText(display);
-
-
-            TextView tempView = activity.findViewById(R.id.forecast_temp);
-            String temperature = String.format(Locale.US, "%.1f - %.1fF", forecast.getMinTemperature(), forecast.getMaxTemperature());
-            tempView.setText(temperature);
-
-            TextView windView = activity.findViewById(R.id.forecast_wind);
-            float windSpeed = forecast.getWindSpeed();
-            String windDirection = WindConverter.directionFromDegrees(forecast.getWindDirection());
-            String wind = String.format(Locale.US, "Wind %.0f %s", windSpeed, windDirection);
-            windView.setText(wind);
-
+            for (WeatherForecasts.WeatherForecast weatherForecast : forecasts.getForecasts()) {
+                TableRow newRow = createNewRow(weatherForecast);
+                tableLayout.addView(newRow);
+            }
         }
 
+    }
+
+    private TableRow createNewRow(WeatherForecasts.WeatherForecast forecast) {
+        TableRow newRow = (TableRow) LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.forecast_table_row, null);
+        TextView timeView = newRow.findViewById(R.id.forecast_time);
+        String formattedTime = simpleDateFormat.format(new Date(forecast.getTimeInFuture()));
+        String display = String.format(Locale.US, "%s", formattedTime);
+        timeView.setText(display);
+
+
+        TextView tempView = newRow.findViewById(R.id.forecast_temp);
+        String temperature = String.format(Locale.US, "%.0fF - %.0fF", forecast.getMinTemperature(), forecast.getMaxTemperature());
+        tempView.setText(temperature);
+
+        TextView windView = newRow.findViewById(R.id.forecast_wind);
+        float windSpeed = forecast.getWindSpeed();
+        String windDirection = WindConverter.directionFromDegrees(forecast.getWindDirection());
+        String wind = String.format(Locale.US, "%.0fmph %s", windSpeed, windDirection);
+        windView.setText(wind);
+
+        return newRow;
     }
 }

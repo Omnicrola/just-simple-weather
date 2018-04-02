@@ -6,52 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TableRow
+        <TableLayout
+            android:id="@+id/forecast_table"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/forecast_time"
-                    android:layout_column="0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="09/99 12:59" />
-
-                <TextView
-                    android:id="@+id/forecast_temp"
-                    android:layout_column="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="100F - 100F" />
-
-                <TextView
-                    android:id="@+id/forecast_wind"
-                    android:layout_column="2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="999mph NE" />
+            android:layout_height="wrap_content">
 
 
-        </TableRow>
+        </TableLayout>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </TableLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
