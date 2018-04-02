@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    transitionToCurrentWeather();
                     return true;
                 case R.id.navigation_future:
+                    transitionToForecast();
                     return true;
                 case R.id.navigation_settings:
                     return true;
@@ -93,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         WeatherFragment weatherFragment = WeatherFragment.newInstance();
         fragmentTransaction.replace(R.id.main_container, weatherFragment);
+        fragmentTransaction.commit();
+    }
+    private void transitionToForecast(){
+        Log.i(LOG_TAG, "Transitioning to forecast fragment");
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        ForecastFragment forecastFragment = ForecastFragment.newInstance();
+        fragmentTransaction.replace(R.id.main_container, forecastFragment);
         fragmentTransaction.commit();
     }
 

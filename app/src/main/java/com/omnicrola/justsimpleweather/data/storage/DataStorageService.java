@@ -84,14 +84,12 @@ public class DataStorageService {
         storageManager.write(FORECAST_STORAGE, forecast);
     }
 
-    public WeatherForecasts getForecast() {
+    public Possible<WeatherForecasts> getForecast() {
         if (storageManager.fileIsMissing(FORECAST_STORAGE)) {
-            return WeatherForecasts.builder()
-                    .timeOfForecast(0)
-                    .forecasts(new ArrayList<WeatherForecasts.WeatherForecast>())
-                    .build();
+            return Possible.empty();
         }
-        return storageManager.read(FORECAST_STORAGE, WeatherForecasts.class);
+        WeatherForecasts forecasts = storageManager.read(FORECAST_STORAGE, WeatherForecasts.class);
+        return Possible.of(forecasts);
     }
 
     private void createDefaultSettings() {
