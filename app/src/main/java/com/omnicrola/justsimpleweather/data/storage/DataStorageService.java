@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.omnicrola.justsimpleweather.api.WeatherSettings;
 import com.omnicrola.justsimpleweather.api.WeatherUnits;
+import com.omnicrola.justsimpleweather.data.WeatherForecasts;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
 import com.omnicrola.justsimpleweather.data.WeatherReportTimeComparator;
 import com.omnicrola.justsimpleweather.util.Possible;
@@ -25,17 +26,17 @@ import java.util.List;
 public class DataStorageService {
     private static final String DATA_STORAGE = "weather-data.json";
     private static final String SETTINGS_STORAGE = "weather-settings.json";
+    private static final String FORECAST_STORAGE = "weather-forecast.json";
+
     private static final Type REPORT_LIST_TYPE = new TypeToken<ArrayList<WeatherReport>>() {
     }.getType();
     private static final int MAX_REPORT_HISTORY = 100;
     private static final String LOG_TAG = "file-io";
 
-    private final Context context;
-    private final Gson gson;
+    private final DataStorageManager storageManager;
 
     public DataStorageService(Context context) {
-        this.context = context;
-        this.gson = new Gson();
+        this.storageManager = new DataStorageManager(context);
     }
 
     public Possible<WeatherReport> getLatestWeather() {
@@ -51,90 +52,46 @@ public class DataStorageService {
     }
 
     private List<WeatherReport> getAllWeather() {
-        if (fileIsMissing(DATA_STORAGE)) {
-            createEmptyFile(DATA_STORAGE);
+        if (storageManager.fileIsMissing(DATA_STORAGE)) {
+            storageManager.createEmptyFile(DATA_STORAGE);
             return new ArrayList<>();
         }
-        try {
-            Log.i(LOG_TAG, "Reading weather data from local storage..");
-            FileInputStream fileInputStream = context.openFileInput(DATA_STORAGE);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
-            List<WeatherReport> weatherReports = gson.fromJson(bufferedReader, REPORT_LIST_TYPE);
-            fileInputStream.close();
-            Log.i(LOG_TAG, "Successfully retrieved weather from local storage.");
-            if(weatherReports==null){
-                return new ArrayList<>();
-            }
-            return weatherReports;
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error while reading from weather data file", e);
-            return new ArrayList<>();
-        }
+        return storageManager.read(DATA_STORAGE, REPORT_LIST_TYPE);
     }
 
     public void saveWeather(WeatherReport weatherReport) {
         List<WeatherReport> allWeather = getAllWeather();
         Log.i(LOG_TAG, "Saving weather...");
-        try {
-            updateWeatherList(weatherReport, allWeather);
-
-            String json = gson.toJson(allWeather);
-            FileOutputStream fileOutputStream = context.openFileOutput(DATA_STORAGE, Context.MODE_PRIVATE);
-            fileOutputStream.write(json.getBytes());
-            fileOutputStream.close();
-            Log.i(LOG_TAG, "Saved.");
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error while saving weather data file", e);
-        }
+        updateWeatherList(weatherReport, allWeather);
+        storageManager.write(DATA_STORAGE, allWeather);
     }
 
-    private List<WeatherReport> updateWeatherList(WeatherReport weatherReport, List<WeatherReport> allWeather) {
-        allWeather.add(weatherReport);
-        Collections.sort(allWeather, new WeatherReportTimeComparator());
-        int count = allWeather.size();
-        if (count > MAX_REPORT_HISTORY) {
-            return allWeather.subList(count - 1 - MAX_REPORT_HISTORY, count - 1);
-        } else {
-            return allWeather;
-        }
-    }
-
-    private boolean fileIsMissing(String filename) {
-        File file = new File(context.getFilesDir(), filename);
-        return !file.exists();
-    }
-
-    private void createEmptyFile(String filename) {
-        File file = new File(context.getFilesDir(), filename);
-        try {
-            boolean newFile = file.createNewFile();
-            if (newFile) {
-                Log.i(LOG_TAG, "New data file created.");
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error creating data file", e);
-        }
-    }
 
     public WeatherSettings getSettings() {
-        if (fileIsMissing(SETTINGS_STORAGE)) {
+        if (storageManager.fileIsMissing(SETTINGS_STORAGE)) {
             createDefaultSettings();
         }
-        WeatherSettings settings = readSettings();
+        WeatherSettings settings = storageManager.read(SETTINGS_STORAGE, WeatherSettings.class);
         Log.i(LOG_TAG, "Got settings from storage");
         return settings;
     }
 
     public void saveSettings(WeatherSettings settings) {
-        try {
-            String json = gson.toJson(settings);
-            FileOutputStream fileOutputStream = context.openFileOutput(SETTINGS_STORAGE, Context.MODE_PRIVATE);
-            fileOutputStream.write(json.getBytes());
-            fileOutputStream.close();
-            Log.i(LOG_TAG, "Settings saved");
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error creating settings file", e);
+        storageManager.write(SETTINGS_STORAGE, settings);
+    }
+
+    public void saveForecast(WeatherForecasts forecast) {
+        storageManager.write(FORECAST_STORAGE, forecast);
+    }
+
+    public WeatherForecasts getForecast() {
+        if (storageManager.fileIsMissing(FORECAST_STORAGE)) {
+            return WeatherForecasts.builder()
+                    .timeOfForecast(0)
+                    .forecasts(new ArrayList<WeatherForecasts.WeatherForecast>())
+                    .build();
         }
+        return storageManager.read(FORECAST_STORAGE, WeatherForecasts.class);
     }
 
     private void createDefaultSettings() {
@@ -147,16 +104,15 @@ public class DataStorageService {
         saveSettings(settings);
     }
 
-    private WeatherSettings readSettings() {
-        try {
-            FileInputStream fileInputStream = context.openFileInput(SETTINGS_STORAGE);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
-            WeatherSettings weatherReports = gson.fromJson(bufferedReader, WeatherSettings.class);
-            fileInputStream.close();
-            return weatherReports;
-        } catch (IOException e) {
-            Log.e("", "Error reading settings", e);
+
+    private List<WeatherReport> updateWeatherList(WeatherReport weatherReport, List<WeatherReport> allWeather) {
+        allWeather.add(weatherReport);
+        Collections.sort(allWeather, new WeatherReportTimeComparator());
+        int count = allWeather.size();
+        if (count > MAX_REPORT_HISTORY) {
+            return allWeather.subList(count - 1 - MAX_REPORT_HISTORY, count - 1);
+        } else {
+            return allWeather;
         }
-        return null;
     }
 }

@@ -50,7 +50,7 @@ public class OpenWeatherDataAdapter implements Callback<OpenWeatherData> {
 
     @Override
     public void onFailure(Call<OpenWeatherData> call, Throwable t) {
-        Log.e("weather-api", "Error calling Open Weather API", t);
+        Log.e(LOG_TAG, "Error calling Open Weather API", t);
         reportHandler.reject(t.getMessage());
     }
 
