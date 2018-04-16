@@ -56,7 +56,12 @@ public class DataStorageService {
             storageManager.createEmptyFile(DATA_STORAGE);
             return new ArrayList<>();
         }
-        return storageManager.read(DATA_STORAGE, REPORT_LIST_TYPE);
+        Possible<List<WeatherReport>> weatherReports = storageManager.read(DATA_STORAGE, REPORT_LIST_TYPE);
+        if(weatherReports.isPresent()){
+            return weatherReports.get();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public void saveWeather(WeatherReport weatherReport) {

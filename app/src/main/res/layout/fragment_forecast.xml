@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="20dp">
 
-    <ScrollView
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TableLayout
-            android:id="@+id/forecast_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-        </TableLayout>
-
-    </ScrollView>
-
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

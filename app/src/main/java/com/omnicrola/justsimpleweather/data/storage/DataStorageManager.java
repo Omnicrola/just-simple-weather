@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.omnicrola.justsimpleweather.api.WeatherSettings;
+import com.omnicrola.justsimpleweather.util.Possible;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,17 +38,17 @@ public class DataStorageManager {
         }
     }
 
-    public <T> T read(String filename, Type returnType) {
+    public <T> Possible<T> read(String filename, Type returnType) {
         try {
             FileInputStream fileInputStream = context.openFileInput(filename);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
             T data = gson.fromJson(bufferedReader, returnType);
             fileInputStream.close();
-            return data;
+            return Possible.of(data);
         } catch (IOException e) {
             Log.e("", "Error reading from file", e);
         }
-        return null;
+        return Possible.empty();
     }
 
     public <T> T read(String filename, Class<T> returnType) {
