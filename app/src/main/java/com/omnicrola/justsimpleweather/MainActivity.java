@@ -13,16 +13,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.omnicrola.justsimpleweather.data.WeatherReport;
 import com.omnicrola.justsimpleweather.data.storage.DataStorageService;
 import com.omnicrola.justsimpleweather.events.WeatherRefreshRequestEvent;
 import com.omnicrola.justsimpleweather.events.WeatherUpdateFailEvent;
 import com.omnicrola.justsimpleweather.events.WeatherUpdateSuccessEvent;
+import com.omnicrola.justsimpleweather.fragments.ForecastFragment;
+import com.omnicrola.justsimpleweather.fragments.SettingsFragment;
+import com.omnicrola.justsimpleweather.fragments.WeatherFragment;
 import com.omnicrola.justsimpleweather.services.NotificationWrapper;
 import com.omnicrola.justsimpleweather.services.WeatherRetrievalService;
 import com.omnicrola.justsimpleweather.ui.MainActivityMessageHandler;
 import com.omnicrola.justsimpleweather.ui.WeatherDisplayAdapter;
-import com.omnicrola.justsimpleweather.util.Possible;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
                     transitionToForecast();
                     return true;
                 case R.id.navigation_settings:
+                    transitionToSettings();
                     return true;
             }
             return false;
@@ -102,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         ForecastFragment forecastFragment = ForecastFragment.newInstance();
         fragmentTransaction.replace(R.id.main_container, forecastFragment);
+        fragmentTransaction.commit();
+    }
+    private void transitionToSettings(){
+        Log.i(LOG_TAG, "Transitioning to settings fragment");
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        SettingsFragment settingsFragment = SettingsFragment.newInstance();
+        fragmentTransaction.replace(R.id.main_container, settingsFragment);
         fragmentTransaction.commit();
     }
 

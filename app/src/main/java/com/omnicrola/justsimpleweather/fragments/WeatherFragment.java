@@ -1,4 +1,4 @@
-package com.omnicrola.justsimpleweather;
+package com.omnicrola.justsimpleweather.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.omnicrola.justsimpleweather.R;
+import com.omnicrola.justsimpleweather.api.WeatherSettings;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
 import com.omnicrola.justsimpleweather.data.storage.DataStorageService;
 import com.omnicrola.justsimpleweather.ui.WeatherDisplayAdapter;
@@ -85,9 +87,10 @@ public class WeatherFragment extends Fragment {
 
     private void updateWeatherFromStorage() {
         Possible<WeatherReport> latestWeather = dataStorageService.getLatestWeather();
-        if(latestWeather.isPresent()){
+        WeatherSettings settings = dataStorageService.getSettings();
+        if (latestWeather.isPresent()) {
             WeatherReport weatherReport = latestWeather.get();
-            this.displayAdapter.setDisplay(weatherReport);
+            this.displayAdapter.setDisplay(weatherReport, settings);
         }
     }
 

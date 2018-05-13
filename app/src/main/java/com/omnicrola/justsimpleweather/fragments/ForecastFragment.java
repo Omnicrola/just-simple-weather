@@ -1,4 +1,4 @@
-package com.omnicrola.justsimpleweather;
+package com.omnicrola.justsimpleweather.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.omnicrola.justsimpleweather.R;
 import com.omnicrola.justsimpleweather.data.WeatherForecasts;
 import com.omnicrola.justsimpleweather.data.storage.DataStorageService;
 import com.omnicrola.justsimpleweather.ui.ForecastDisplayAdapter;

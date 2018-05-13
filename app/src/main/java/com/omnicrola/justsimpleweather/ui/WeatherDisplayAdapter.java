@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.omnicrola.justsimpleweather.R;
+import com.omnicrola.justsimpleweather.api.WeatherSettings;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
 import com.omnicrola.justsimpleweather.util.WindConverter;
 
@@ -21,13 +22,13 @@ public class WeatherDisplayAdapter {
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
     }
 
-    public void setDisplay(WeatherReport weatherReport) {
+    public void setDisplay(WeatherReport weatherReport, WeatherSettings settings) {
         if (activity.findViewById(R.id.current_temperature) == null) {
             return;
         }
         Log.i("display-adapter", "Updating weather text views");
-        setTemperature(weatherReport);
-        setWind(weatherReport);
+        setTemperature(weatherReport, settings);
+        setWind(weatherReport, settings);
         setHumidity(weatherReport);
         setTimestamp(weatherReport);
     }
@@ -45,17 +46,19 @@ public class WeatherDisplayAdapter {
         humidityView.setText(display);
     }
 
-    private void setWind(WeatherReport weatherReport) {
+    private void setWind(WeatherReport weatherReport, WeatherSettings settings) {
         TextView windView = activity.findViewById(R.id.current_wind);
         float windSpeed = weatherReport.getWindSpeed();
         String windDirection = WindConverter.directionFromDegrees(weatherReport.getWindDirection());
-        String display = String.format(Locale.US, "Wind %.0f %s", windSpeed, windDirection);
+        String windUnit = settings.getUnits().getWindUnit();
+        String display = String.format(Locale.US, "Wind %.0f%s %s", windSpeed, windUnit, windDirection);
         windView.setText(display);
     }
 
-    private void setTemperature(WeatherReport weatherReport) {
+    private void setTemperature(WeatherReport weatherReport, WeatherSettings settings) {
         TextView tempView = activity.findViewById(R.id.current_temperature);
-        String display = String.format(Locale.US, "%.1fF", weatherReport.getTemperature());
+        String tempUnit = settings.getUnits().getTemperatureLetter();
+        String display = String.format(Locale.US, "%.1f%s", weatherReport.getTemperature(), tempUnit);
         tempView.setText(display);
     }
 }

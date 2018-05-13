@@ -3,7 +3,7 @@
     android:layout_margin="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.omnicrola.justsimpleweather.WeatherFragment">
+    tools:context="com.omnicrola.justsimpleweather.fragments.WeatherFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

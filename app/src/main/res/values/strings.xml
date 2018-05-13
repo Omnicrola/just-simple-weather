@@ -10,4 +10,20 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_settings">Settings</string>
     <string name="title_future">Future</string>
+    <string name="label_zip_code">Zip Code:</string>
+    <string name="units_label">Units:</string>
+    <string name="country_label">Country:</string>
+
+    <string-array name="units_list">
+        <item>Imperial</item>
+        <item>Metric</item>
+        <item>Kelvin</item>
+    </string-array>
+
+    <string-array name="country_codes">
+        <item>US</item>
+        <item>CA</item>
+        <item>MX</item>
+        <item>GB</item>
+    </string-array>
 </resources>
