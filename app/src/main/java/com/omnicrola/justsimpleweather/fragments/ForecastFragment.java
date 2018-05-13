@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omnicrola.justsimpleweather.R;
+import com.omnicrola.justsimpleweather.api.WeatherSettings;
 import com.omnicrola.justsimpleweather.data.WeatherForecasts;
 import com.omnicrola.justsimpleweather.data.storage.DataStorageService;
 import com.omnicrola.justsimpleweather.ui.ForecastDisplayAdapter;
@@ -61,15 +62,16 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        this.displayAdapter.initDisplay();
         updateForecastFromStorage();
     }
 
     private void updateForecastFromStorage() {
         Possible<WeatherForecasts> forecast = dataStorageService.getForecast();
+        WeatherSettings settings = dataStorageService.getSettings();
+        this.displayAdapter.initDisplay(settings);
         if (forecast.isPresent()) {
             WeatherForecasts weatherForecasts = forecast.get();
-            this.displayAdapter.setDisplay(weatherForecasts);
+            this.displayAdapter.setDisplay(settings, weatherForecasts);
         }
     }
 

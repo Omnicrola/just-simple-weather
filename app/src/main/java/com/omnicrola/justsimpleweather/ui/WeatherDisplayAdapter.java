@@ -6,7 +6,9 @@ import android.widget.TextView;
 
 import com.omnicrola.justsimpleweather.R;
 import com.omnicrola.justsimpleweather.api.WeatherSettings;
+import com.omnicrola.justsimpleweather.api.WeatherUnits;
 import com.omnicrola.justsimpleweather.data.WeatherReport;
+import com.omnicrola.justsimpleweather.util.UnitConversion;
 import com.omnicrola.justsimpleweather.util.WindConverter;
 
 import java.text.SimpleDateFormat;
@@ -48,17 +50,21 @@ public class WeatherDisplayAdapter {
 
     private void setWind(WeatherReport weatherReport, WeatherSettings settings) {
         TextView windView = activity.findViewById(R.id.current_wind);
-        float windSpeed = weatherReport.getWindSpeed();
         String windDirection = WindConverter.directionFromDegrees(weatherReport.getWindDirection());
-        String windUnit = settings.getUnits().getWindUnit();
+        WeatherUnits units = settings.getUnits();
+        String windUnit = units.getWindUnit();
+        float windSpeed = UnitConversion.speed(units, weatherReport.getWindSpeed());
         String display = String.format(Locale.US, "Wind %.0f%s %s", windSpeed, windUnit, windDirection);
         windView.setText(display);
     }
 
     private void setTemperature(WeatherReport weatherReport, WeatherSettings settings) {
         TextView tempView = activity.findViewById(R.id.current_temperature);
-        String tempUnit = settings.getUnits().getTemperatureLetter();
-        String display = String.format(Locale.US, "%.1f%s", weatherReport.getTemperature(), tempUnit);
+        WeatherUnits units = settings.getUnits();
+        String tempUnit = units.getTemperatureLetter();
+        float temperature = UnitConversion.temperature(units, weatherReport.getTemperature());
+
+        String display = String.format(Locale.US, "%.1f%s", temperature, tempUnit);
         tempView.setText(display);
     }
 }

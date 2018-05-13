@@ -2,13 +2,11 @@ package com.omnicrola.justsimpleweather.fragments;
 
 
 import android.app.Fragment;
-import android.bluetooth.le.AdvertiseData;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -60,10 +58,10 @@ public class SettingsFragment extends Fragment {
         super.onStart();
         WeatherSettings settings = dataStorageService.getSettings();
 
-        EditText zipCode = getView().findViewById(R.id.settings_zip_code);
+        EditText cityName = getView().findViewById(R.id.settings_city);
         SettingsUpdateListener updateListener = SettingsUpdateListener.builder()
                 .dataStorageService(dataStorageService)
-                .zipcodeView(zipCode)
+                .cityEditText(cityName)
                 .countrySpinner((Spinner) getView().findViewById(R.id.settings_country))
                 .unitSpinner((Spinner) getView().findViewById(R.id.settings_units))
                 .build();
@@ -83,7 +81,7 @@ public class SettingsFragment extends Fragment {
                 .onSelected(updateListener)
                 .finish();
 
-        zipCode.setText(settings.getZipCode());
+        cityName.setText(settings.getCity());
     }
 
     @Override

@@ -7,8 +7,8 @@ import retrofit2.http.Query;
 public interface OpenWeatherApi {
 
     @GET("weather")
-    Call<OpenWeatherData> getWeatherForLocation(@Query("zip") String zip, @Query("units") String units, @Query("APPID") String appId);
+    Call<OpenWeatherData> getWeatherForLocation(@Query("q") String cityAndCountry, @Query("units") String units, @Query("APPID") String appId);
 
     @GET("forecast")
-    Call<OpenWeatherForecastData> getWeatherForecast(@Query("zip") String zip, @Query("units") String units, @Query("APPID") String appid);
+    Call<OpenWeatherForecastData> getWeatherForecast(@Query("q") String cityAndCountry, @Query("units") String units, @Query("APPID") String appid);
 }

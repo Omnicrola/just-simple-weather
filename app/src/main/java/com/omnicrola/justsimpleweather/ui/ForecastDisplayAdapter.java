@@ -14,8 +14,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.omnicrola.justsimpleweather.R;
+import com.omnicrola.justsimpleweather.api.WeatherSettings;
+import com.omnicrola.justsimpleweather.api.WeatherUnits;
 import com.omnicrola.justsimpleweather.data.WeatherForecasts;
+import com.omnicrola.justsimpleweather.ui.chart.TemperatureAxisValueFormatter;
 import com.omnicrola.justsimpleweather.ui.chart.TimeAxisValueFormatter;
+import com.omnicrola.justsimpleweather.util.UnitConversion;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,16 +34,18 @@ public class ForecastDisplayAdapter {
         this.activity = activity;
     }
 
-    public void setDisplay(WeatherForecasts forecasts) {
+    public void setDisplay(WeatherSettings settings, WeatherForecasts forecasts) {
         ArrayList<Entry> minTemps = new ArrayList<Entry>();
         ArrayList<Entry> maxTemps = new ArrayList<Entry>();
 
-        adjustVerticalAxis(forecasts.getForecasts());
-
+        adjustVerticalAxis(settings, forecasts.getForecasts());
+        WeatherUnits units = settings.getUnits();
         for (WeatherForecasts.WeatherForecast weatherForecast : forecasts.getForecasts()) {
-            long time = weatherForecast.getTimeInFuture() / (1000*60);
-            minTemps.add(new Entry(time, weatherForecast.getMinTemperature()));
-            maxTemps.add(new Entry(time, weatherForecast.getMaxTemperature()));
+            long time = weatherForecast.getTimeInFuture() / (1000 * 60);
+            float min = UnitConversion.temperature(units, weatherForecast.getMinTemperature());
+            float max = UnitConversion.temperature(units, weatherForecast.getMaxTemperature());
+            minTemps.add(new Entry(time, min));
+            maxTemps.add(new Entry(time, max));
         }
         setData(minTemps, 0, Color.BLUE);
         setData(maxTemps, 1, Color.RED);
@@ -48,26 +54,30 @@ public class ForecastDisplayAdapter {
         lineChart.requestLayout();
     }
 
-    private void adjustVerticalAxis(List<WeatherForecasts.WeatherForecast> forecasts) {
+    private void adjustVerticalAxis(WeatherSettings settings, List<WeatherForecasts.WeatherForecast> forecasts) {
         float maxTemp = Float.MIN_VALUE;
         float minTemp = Float.MAX_VALUE;
+        WeatherUnits units = settings.getUnits();
         for (WeatherForecasts.WeatherForecast forecast : forecasts) {
-            maxTemp = Math.max(forecast.getMaxTemperature(), maxTemp);
-            minTemp = Math.min(forecast.getMinTemperature(), minTemp);
+            float min = UnitConversion.temperature(units, forecast.getMinTemperature());
+            float max = UnitConversion.temperature(units, forecast.getMaxTemperature());
+            maxTemp = Math.max(max, maxTemp);
+            minTemp = Math.min(min, minTemp);
         }
 
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setAxisMaximum(maxTemp + 20f);
         leftAxis.setAxisMinimum(minTemp + -20f);
-
     }
 
-    public void initDisplay() {
+    public void initDisplay(WeatherSettings settings) {
 
         lineChart = activity.findViewById(R.id.chart1);
         lineChart.setDragEnabled(true);
 
+        WeatherUnits units = settings.getUnits();
         YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setValueFormatter(new TemperatureAxisValueFormatter(units));
         leftAxis.setAxisMaximum(120f);
         leftAxis.setAxisMinimum(-50f);
 

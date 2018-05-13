@@ -20,7 +20,7 @@ public class SettingsUpdateListener implements AdapterView.OnItemSelectedListene
     private final DataStorageService dataStorageService;
     private final Spinner countrySpinner;
     private final Spinner unitSpinner;
-    private final EditText zipcodeView;
+    private final EditText cityEditText;
 
 
     @Override
@@ -29,8 +29,8 @@ public class SettingsUpdateListener implements AdapterView.OnItemSelectedListene
         String country = countrySpinner.getSelectedItem().toString();
         WeatherUnits units = WeatherUnits.valueOf(unitSpinner.getSelectedItem().toString().toUpperCase());
 
-        String zipCode = zipcodeView.getText().toString();
-        WeatherSettings weatherSettings = new WeatherSettings(units, zipCode, country);
+        String city = cityEditText.getText().toString();
+        WeatherSettings weatherSettings = new WeatherSettings(units, city, country);
         dataStorageService.saveSettings(weatherSettings);
     }
 

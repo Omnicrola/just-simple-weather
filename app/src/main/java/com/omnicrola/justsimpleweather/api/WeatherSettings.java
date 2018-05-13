@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WeatherSettings {
     private WeatherUnits units;
-    private String zipCode;
+    private String city;
     private String country;
 }

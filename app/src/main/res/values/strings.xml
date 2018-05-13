@@ -10,7 +10,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_settings">Settings</string>
     <string name="title_future">Future</string>
-    <string name="label_zip_code">Zip Code:</string>
+    <string name="label_city">City:</string>
     <string name="units_label">Units:</string>
     <string name="country_label">Country:</string>
 

@@ -15,6 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OpenWeatherWrapper implements WeatherApi {
 
+    // default in this case means kelvin for temperature, and meters for wind speed
+    private static final String USE_DEFAULT_UNITS = "";
+
     private final OpenWeatherApi openWeatherApi;
     private final String appId;
 
@@ -29,19 +32,17 @@ public class OpenWeatherWrapper implements WeatherApi {
 
     @Override
     public void getCurrentWeather(WeatherSettings weatherSettings, final ResultHandler<WeatherReport> reportHandler) {
-        String zip = weatherSettings.getZipCode() + "," + weatherSettings.getCountry();
-        String units = String.valueOf(weatherSettings.getUnits());
-        Log.i("open-weather", "Getting weather for : " + zip + " " + units);
-        Call<OpenWeatherData> weatherForLocation = openWeatherApi.getWeatherForLocation(zip, units, appId);
+        String cityAndCountry = weatherSettings.getCity() + "," + weatherSettings.getCountry();
+        Log.i("open-weather", "Getting weather for : " + cityAndCountry + " " + USE_DEFAULT_UNITS);
+        Call<OpenWeatherData> weatherForLocation = openWeatherApi.getWeatherForLocation(cityAndCountry, USE_DEFAULT_UNITS, appId);
         weatherForLocation.enqueue(new OpenWeatherDataAdapter(reportHandler));
     }
 
     @Override
     public void getWeatherForecast(WeatherSettings weatherSettings, ResultHandler<WeatherForecasts> reportHandler) {
-        String zip = weatherSettings.getZipCode() + "," + weatherSettings.getCountry();
-        String units = String.valueOf(weatherSettings.getUnits());
-        Log.i("open-weather", "Getting forecast for : " + zip + " " + units);
-        Call<OpenWeatherForecastData> weatherForecast = openWeatherApi.getWeatherForecast(zip, units, appId);
+        String cityAndCountry = weatherSettings.getCity() + "," + weatherSettings.getCountry();
+        Log.i("open-weather", "Getting forecast for : " + cityAndCountry + " " + USE_DEFAULT_UNITS);
+        Call<OpenWeatherForecastData> weatherForecast = openWeatherApi.getWeatherForecast(cityAndCountry, USE_DEFAULT_UNITS, appId);
         weatherForecast.enqueue(new OpenWeatherForecastDataAdapter(reportHandler));
     }
 

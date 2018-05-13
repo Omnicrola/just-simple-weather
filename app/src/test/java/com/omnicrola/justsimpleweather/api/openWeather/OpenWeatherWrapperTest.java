@@ -36,7 +36,7 @@ public class OpenWeatherWrapperTest {
 
         weatherSettings = WeatherSettings.builder()
                 .country("us")
-                .zipCode("90210")
+                .city("New York")
                 .units(WeatherUnits.IMPERIAL)
                 .build();
     }

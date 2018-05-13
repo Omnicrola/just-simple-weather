@@ -100,7 +100,7 @@ public class DataStorageService {
     private void createDefaultSettings() {
         WeatherSettings settings = WeatherSettings.builder()
                 .country("us")
-                .zipCode("48198")
+                .city("48198")
                 .units(WeatherUnits.IMPERIAL)
                 .build();
         Log.i(LOG_TAG, "Creating default settings...");

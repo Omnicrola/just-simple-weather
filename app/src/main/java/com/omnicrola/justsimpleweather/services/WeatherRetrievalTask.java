@@ -38,14 +38,14 @@ class WeatherRetrievalTask extends TimerTask {
     }
 
 
-    private void getCurrentWeather(WeatherSettings settings) {
+    private void getCurrentWeather(final WeatherSettings settings) {
         weatherApi.getCurrentWeather(settings, new ResultHandler<WeatherReport>() {
             @Override
             public void handle(WeatherReport weatherReport) {
                 dataStorageService.saveWeather(weatherReport);
                 Log.i("get-weather", "sending message : SUCCESS");
                 EventBus.getDefault().post(WeatherUpdateSuccessEvent.instance());
-                notificationWrapper.setDisplay(weatherReport);
+                notificationWrapper.setDisplay(settings, weatherReport);
             }
 
             @Override
